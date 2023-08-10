@@ -1,7 +1,7 @@
 <template>
   <div class="contarner">
     <global-header :user="currentUser"></global-header>
-    <form action="">
+    <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">邮箱地址</label>
         <validate-input
@@ -9,27 +9,31 @@
           v-model="emailVal"
           type="text"
           placeholder="请输入邮箱地址"
-        >
-        </validate-input>
+        ></validate-input>
       </div>
       <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">密码</label>
-        <input
+        <validate-input
+          :rules="passwordRules"
           type="password"
           class="form-control"
           id="exampleInputPassword1"
           placeholder="请输入密码"
-        />
+        ></validate-input>
       </div>
-    </form>
+      <template #submit>
+        <span class="btn btn-primary">提交</span>
+      </template>
+    </validate-form>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import ValidateInput, { RulesProp } from './components/ValidateInput.vue'
 import GlobalHeader, { userProps } from './components/GlobalHeader.vue'
-const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+import ValidateForm from './components/ValidateForm.vue'
+// const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
 const currentUser: userProps = {
   isLogin: true,
@@ -43,7 +47,8 @@ export default defineComponent({
   components: {
     // ColumnList,
     GlobalHeader,
-    ValidateInput
+    ValidateInput,
+    ValidateForm
   },
   setup() {
     const emailVal = ref('')
@@ -51,26 +56,19 @@ export default defineComponent({
       { type: 'required', message: '电子邮箱地址不能为空' },
       { type: 'email', message: '请输入正确的电子邮箱格式' }
     ]
-    const emailRef = reactive({
-      val: '',
-      error: false,
-      message: ''
-    })
-    const validateEmail = () => {
-      if (emailRef.val.trim() === '') {
-        emailRef.error = true
-        emailRef.message = 'can not be empty'
-      } else if (!emailReg.test(emailRef.val)) {
-        emailRef.error = true
-        emailRef.message = 'should be valid email'
-      }
+
+    const passwordVal = ref('')
+    const passwordRules: RulesProp = [{ type: 'required', message: '密码不能为空' }]
+    const onFormSubmit = (result: boolean) => {
+      console.log('1234', result)
     }
     return {
       currentUser,
-      emailRef,
-      validateEmail,
       emailRules,
-      emailVal
+      emailVal,
+      passwordVal,
+      passwordRules,
+      onFormSubmit
     }
   }
 })
