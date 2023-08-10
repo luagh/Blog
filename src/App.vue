@@ -9,14 +9,14 @@
           v-model="emailVal"
           type="text"
           placeholder="请输入邮箱地址"
+          ref="inputRef"
         ></validate-input>
       </div>
       <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">密码</label>
         <validate-input
+          v-model="passwordVal"
           :rules="passwordRules"
-          type="password"
-          class="form-control"
           id="exampleInputPassword1"
           placeholder="请输入密码"
         ></validate-input>
@@ -32,7 +32,7 @@
 import { defineComponent, ref } from 'vue'
 import ValidateInput, { RulesProp } from './components/ValidateInput.vue'
 import GlobalHeader, { userProps } from './components/GlobalHeader.vue'
-import ValidateForm from './components/ValidateForm.vue'
+import ValidateForm, { emitter } from './components/ValidateForm.vue'
 // const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
 const currentUser: userProps = {
@@ -51,6 +51,7 @@ export default defineComponent({
     ValidateForm
   },
   setup() {
+    const inputRef = ref<any>()
     const emailVal = ref('')
     const emailRules: RulesProp = [
       { type: 'required', message: '电子邮箱地址不能为空' },
@@ -60,7 +61,8 @@ export default defineComponent({
     const passwordVal = ref('')
     const passwordRules: RulesProp = [{ type: 'required', message: '密码不能为空' }]
     const onFormSubmit = (result: boolean) => {
-      console.log('1234', result)
+      console.log(result)
+      emitter.emit('clear-input', result)
     }
     return {
       currentUser,
@@ -68,7 +70,8 @@ export default defineComponent({
       emailVal,
       passwordVal,
       passwordRules,
-      onFormSubmit
+      onFormSubmit,
+      inputRef
     }
   }
 })
