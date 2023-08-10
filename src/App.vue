@@ -1,15 +1,17 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
   <div class="contarner">
+    <global-header :user="currentUser"></global-header>
     <column-list :list="list"></column-list>
-    <div class="alert alert-primary" role="alert">A simple primary alert—check it out!</div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-
+import GlobalHeader, { userProps } from './components/GlobalHeader.vue'
+const currentUser: userProps = {
+  isLogin: true,
+  name: 'wdf'
+}
 import 'bootstrap/dist/css/bootstrap.min.css'
 import ColumnList, { type ColumnProps } from './components/ColumnList.vue'
 const testData: ColumnProps[] = [
@@ -45,11 +47,13 @@ const testData: ColumnProps[] = [
 export default defineComponent({
   name: 'App',
   components: {
-    ColumnList
+    ColumnList,
+    GlobalHeader
   },
   setup() {
     return {
-      list: testData
+      list: testData,
+      currentUser
     }
   }
 })
