@@ -1,7 +1,7 @@
 <template>
   <div class="contarner">
     <global-header :user="currentUser"></global-header>
-    <h1>{{ error.message }}</h1>
+    <!-- <message type="error" :message="error.message" v-if="error.status"></message> -->
     <loader v-if="isLoading" text="拼命加载中" background="rgba(0, 0, 0, 0.8)"></loader>
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
@@ -17,11 +17,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onMounted } from 'vue'
+import { defineComponent, computed, onMounted, watch } from 'vue'
 import { useStore } from 'vuex'
 import axios from '@/libs/http'
 import GlobalHeader from './components/GlobalHeader.vue'
 import Loader from '@/base/Loading.vue'
+import Message from '@/base/Message.vue'
+import createMessage from '@/base/createMessage'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 export default defineComponent({
@@ -42,6 +44,15 @@ export default defineComponent({
         store.dispatch('fetchCurrentUser')
       }
     })
+    watch(
+      () => error.value.status,
+      () => {
+        const { status, message } = error.value
+        if (status && message) {
+          createMessage(message, 'error')
+        }
+      }
+    )
     return {
       currentUser,
       isLoading,

@@ -14,7 +14,8 @@ import { defineComponent, onUnmounted } from 'vue'
 import mitt, { Emitter } from 'mitt'
 
 type ValidateFunc = () => boolean
-export const emitter: Emitter = mitt()
+// export const emitter: Emitter = mitt()
+export const emitter = mitt()
 export default defineComponent({
   name: 'ValidateForm',
   emits: ['form-submit'],
@@ -24,7 +25,7 @@ export default defineComponent({
       const result = funcArr.map((func) => func()).every((result) => result)
       context.emit('form-submit', result)
     }
-    const callback = (func?: ValidateFunc) => {
+    const callback = (func?: any) => {
       if (func) funcArr.push(func)
     }
     emitter.on('form-item-created', callback)

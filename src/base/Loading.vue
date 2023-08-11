@@ -12,8 +12,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue'
+import useDOMCreate from '@/hooks/useDomCreate'
 export default defineComponent({
   name: 'Loader',
   props: {
@@ -25,6 +26,7 @@ export default defineComponent({
     }
   },
   setup() {
+    useDOMCreate('back')
     return {}
   }
 })
