@@ -11,7 +11,12 @@ export interface PostProps {
   content: string
   image?: string
   createdAt: string
-  columnId: number
+  columnId?: number
+}
+
+export interface RuleProps {
+  type: 'required' | 'email'
+  message: string
 }
 export interface UserProps {
   isLogin: boolean
@@ -21,8 +26,8 @@ export interface UserProps {
 
 export const currentUser: UserProps = {
   isLogin: false,
-  name: 'wangzha',
-  id: 'w_123'
+  name: 'wdf',
+  id: '1'
 }
 export const testColumns: ColumnProps[] = [
   {
