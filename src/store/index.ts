@@ -2,23 +2,26 @@ import { createStore, Commit } from 'vuex'
 import { currentUser, ColumnProps, PostProps, UserProps } from '@/store/testData'
 import axios from '@/libs/http'
 export interface GlobalDataProps {
+  loading: boolean
   columns: ColumnProps[]
   posts: PostProps[]
   user: UserProps
 }
 const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
   const { data } = await axios.get(url)
+  await new Promise((resolve) => setTimeout(resolve, 3000))
   commit(mutationName, data)
 }
 const store = createStore<GlobalDataProps>({
   state: {
+    loading: false,
     columns: [],
     posts: [],
     user: currentUser
   },
   mutations: {
     login(state) {
-      state.user = { ...state.user, isLogin: true, name: '咬楼猪' }
+      state.user = { ...state.user, isLogin: true, name: 'wdf' }
     },
     createPost(state, newPost) {
       state.posts.push(newPost)
@@ -34,19 +37,28 @@ const store = createStore<GlobalDataProps>({
     fetchPosts(state, rawData) {
       console.log(rawData.data.list)
       state.posts = rawData.data.list
+    },
+    setLoading(state, status) {
+      state.loading = status
     }
   },
   actions: {
     fetchColumns({ commit }) {
       getAndCommit('/api/columns', 'fetchColumns', commit)
     },
-    async fetchColumn({ commit }, cid) {
-      const { data } = await axios.get(`/api/columns/${cid}`)
-      commit('fetchColumn', data)
+    // async fetchColumn({ commit }, cid) {
+    //   const { data } = await axios.get(`/api/columns/${cid}`)
+    //   commit('fetchColumn', data)
+    // },
+    // async fetchPosts({ commit }, cid) {
+    //   const { data } = await axios.get(`/api/columns/${cid}/posts`)
+    //   commit('fetchPosts', data)
+    // }
+    fetchColumn({ commit }, cid) {
+      getAndCommit(`/api/columns/${cid}`, 'fetchColumn', commit)
     },
-    async fetchPosts({ commit }, cid) {
-      const { data } = await axios.get(`/api/columns/${cid}/posts`)
-      commit('fetchPosts', data)
+    fetchPosts({ commit }, cid) {
+      getAndCommit(`/api/columns/${cid}/posts`, 'fetchPosts', commit)
     }
   },
   getters: {
