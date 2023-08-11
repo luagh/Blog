@@ -16,7 +16,7 @@
 import { defineComponent } from 'vue'
 import useDOMCreate from '@/hooks/useDomCreate'
 export default defineComponent({
-  name: 'Loader',
+  name: 'Loading',
   props: {
     text: {
       type: String
