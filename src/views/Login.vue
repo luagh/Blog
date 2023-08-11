@@ -1,5 +1,6 @@
 <template>
   <div class="login-page">
+    <h5 class="my-4 text-center">登录wdf账户</h5>
     <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">邮箱地址</label>
@@ -21,7 +22,7 @@
         ></validate-input>
       </div>
       <template v-slot:submit>
-        <span class="btn btn-danger">Submit</span>
+        <button type="submit" class="btn btn-primary btn-block btn-large">登录</button>
       </template>
     </validate-form>
   </div>
@@ -32,7 +33,7 @@ import { defineComponent, ref } from 'vue'
 import ValidateInput, { RulesProps } from '../base/ValidateInput.vue'
 import ValidateForm from '../base/ValidateForm.vue'
 export default defineComponent({
-  name: 'App',
+  name: 'Login',
   components: {
     ValidateInput,
     ValidateForm
