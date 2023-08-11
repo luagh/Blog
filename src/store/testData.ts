@@ -25,7 +25,7 @@ export interface UserProps {
 }
 
 export const currentUser: UserProps = {
-  isLogin: false,
+  isLogin: true,
   name: 'wdf',
   id: '1'
 }
