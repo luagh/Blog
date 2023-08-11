@@ -1,10 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '@/views/Home.vue'
 import Login from '@/views/Login.vue'
-<<<<<<< HEAD
-import ColumnDetail from '@/views/columnDetail.vue'
-=======
->>>>>>> 15c501eca111e704deeee2d11dc3bf0767825cee
+import ColumnDetail from '@/views/ColumnDetail.vue'
 
 const routerHistory = createWebHistory()
 const router = createRouter({
