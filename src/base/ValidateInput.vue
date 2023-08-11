@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, PropType, onMounted, toRefs } from 'vue'
-import { RuleProps } from '../testData'
+import { RuleProps } from '../store/testData'
 import { emitter } from './ValidateForm.vue'
 const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 export type RulesProps = RuleProps[]
