@@ -32,6 +32,8 @@
 import { defineComponent, ref } from 'vue'
 import ValidateInput, { RulesProps } from '../base/ValidateInput.vue'
 import ValidateForm from '../base/ValidateForm.vue'
+import store from '@/store/index'
+import router from '@/router/router'
 export default defineComponent({
   name: 'Login',
   components: {
@@ -48,7 +50,16 @@ export default defineComponent({
     const passwordVal = ref('')
     const passwordRules: RulesProps = [{ type: 'required', message: '密码不能为空' }]
     const onFormSubmit = (result: boolean) => {
-      console.log(result)
+      if (result) {
+        const payload = {
+          email: emailVal.value,
+          password: passwordVal.value
+        }
+        store.dispatch('loginAndFetch', payload).then((res) => {
+          console.log(res)
+          router.push('/')
+        })
+      }
     }
     return {
       emailRules,

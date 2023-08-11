@@ -16,9 +16,10 @@ export interface PostProps {
 
 export interface UserProps {
   isLogin: boolean
-  name?: string
-  id?: string
-  columnId?: string
+  nickName?: string
+  _id?: string
+  column?: string
+  email?: string
 }
 
 export interface ColumnProps {
@@ -33,10 +34,7 @@ export interface RuleProps {
   message: string
 }
 export const currentUser: UserProps = {
-  isLogin: true,
-  name: 'wdf',
-  id: 'w_123',
-  columnId: '1'
+  isLogin: false
 }
 
 export const testColumns: ColumnProps[] = [

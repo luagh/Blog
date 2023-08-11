@@ -16,8 +16,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, onMounted } from 'vue'
 import { useStore } from 'vuex'
+import axios from '@/libs/http'
 import GlobalHeader from './components/GlobalHeader.vue'
 import Loader from '@/base/Loader.vue'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -32,6 +33,13 @@ export default defineComponent({
     const store = useStore()
     const currentUser = computed(() => store.state.user)
     const isLoading = computed(() => store.state.loading)
+    const token = computed(() => store.state.token)
+    onMounted(() => {
+      if (!currentUser.value.isLogin && token.value) {
+        axios.defaults.headers.common.Authorization = `Bearer ${token.value}`
+        store.dispatch('fetchCurrentUser')
+      }
+    })
     return {
       currentUser,
       isLoading
