@@ -1,6 +1,6 @@
 <template>
   <div class="signup-page mx-auto p-3 w-330">
-    <h5 class="my-4 text-center">注册咬楼猪账户</h5>
+    <h5 class="my-4 text-center">注册wdf账户</h5>
     <validate-form @form-submit="onFormSubmit">
       <div class="mb-3">
         <label class="form-label">邮箱地址</label>
@@ -8,16 +8,16 @@
           type="text"
           placeholder="请输入邮箱地址"
           :rules="emailRules"
-          v-model="emailVal"
+          v-model="formData.email"
         ></validate-input>
       </div>
       <div class="mb-3">
         <label class="form-label">昵称</label>
         <validate-input
           type="text"
-          placeholder="昵称"
-          :rules="nameRules"
-          v-model="nicknameVal"
+          placeholder="请输入昵称"
+          :rules="nickNameRules"
+          v-model="formData.nickName"
         ></validate-input>
       </div>
       <div class="mb-3">
@@ -26,7 +26,7 @@
           type="password"
           placeholder="请输入密码"
           :rules="passwordRules"
-          v-model="passwordVal"
+          v-model="formData.password"
         ></validate-input>
       </div>
       <div class="mb-3">
@@ -35,7 +35,7 @@
           type="password"
           placeholder="请再次输入密码"
           :rules="repeatPasswordRules"
-          v-model="repeatPasswordVal"
+          v-model="formData.repeatPassword"
         ></validate-input>
       </div>
       <template v-slot:submit>
@@ -46,10 +46,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 import ValidateInput, { RulesProps } from '@/base/ValidateInput.vue'
 import ValidateForm from '@/base/ValidateForm.vue'
+import createMessage from '@/base/createMessage'
 export default defineComponent({
   name: 'Signup',
   components: {
@@ -57,31 +59,57 @@ export default defineComponent({
     ValidateForm
   },
   setup() {
-    const emailVal = ref('')
+    const formData = reactive({
+      email: '',
+      nickName: '',
+      password: '',
+      repeatPassword: ''
+    })
     const emailRules: RulesProps = [
       { type: 'required', message: '电子邮箱地址不能为空' },
       { type: 'email', message: '请输入正确的电子邮箱格式' }
     ]
-    const nicknameVal = ref('')
-    const nameRules: RulesProps = [{ type: 'required', message: '昵称不能为空' }]
-    const passwordVal = ref('')
+    const nickNameRules: RulesProps = [{ type: 'required', message: '昵称不能为空' }]
     const passwordRules: RulesProps = [{ type: 'required', message: '密码不能为空' }]
     const repeatPasswordVal = ref('')
-    const repeatPasswordRules: RulesProps = [{ type: 'required', message: '重复密码不能为空' }]
+    const repeatPasswordRules: RulesProps = [
+      { type: 'required', message: '重复密码不能为空' },
+      {
+        type: 'custom',
+        validator: () => {
+          return formData.password === formData.repeatPassword
+        },
+        message: '密码不相同'
+      }
+    ]
     const router = useRouter()
+    const store = useStore()
     const onFormSubmit = (result: boolean) => {
       if (result) {
-        router.push('/login')
+        const payload = {
+          email: formData.email,
+          nick_name: formData.nickName,
+          password: formData.password,
+          password_confirm: formData.repeatPassword
+        }
+        store
+          .dispatch('register', payload)
+          .then(() => {
+            createMessage('注册成功 正在跳转登录页面', 'success')
+            setTimeout(() => {
+              router.push('/login')
+            }, 1000)
+          })
+          .catch((e) => {
+            console.log(e)
+          })
       }
     }
     return {
-      emailVal,
       emailRules,
-      nicknameVal,
-      nameRules,
+      formData,
+      nickNameRules,
       passwordRules,
-      passwordVal,
-      repeatPasswordVal,
       repeatPasswordRules,
       onFormSubmit
     }
