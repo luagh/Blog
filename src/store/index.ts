@@ -52,6 +52,13 @@ const store = createStore<GlobalDataProps>({
       console.log(rawData.data.list)
       state.posts = rawData.data.list
     },
+    fetchPost(state, rawData) {
+      // 更新替换对应post的数据
+      const targetId = rawData.data._id
+      const oldIndex = state.posts.findIndex((c) => c._id === targetId)
+      const newPost = rawData.data
+      state.posts.splice(oldIndex, 1, newPost)
+    },
     fetchCurrentUser(state, rawData) {
       state.user = { isLogin: true, ...rawData.data }
     },
@@ -69,6 +76,7 @@ const store = createStore<GlobalDataProps>({
     },
     logout(state) {
       state.token = ''
+      state.user = { isLogin: false }
       storageHandler.remove(storageType, 'token')
       delete axios.defaults.headers.common.Authorization
     }
@@ -82,6 +90,9 @@ const store = createStore<GlobalDataProps>({
     },
     fetchPosts({ commit }, cid) {
       return getAndCommit(`/api/columns/${cid}/posts`, 'fetchPosts', commit)
+    },
+    fetchPost({ commit }, id) {
+      return getAndCommit(`/api/posts/${id}`, 'fetchPost', commit)
     },
     fetchCurrentUser({ commit }) {
       return getAndCommit('/api/user/current', 'fetchCurrentUser', commit)
@@ -107,6 +118,9 @@ const store = createStore<GlobalDataProps>({
     },
     getPostsById: (state) => (cid: string) => {
       return state.posts.filter((post) => post.column === cid)
+    },
+    getCurrentPost: (state) => (id: string) => {
+      return state.posts.find((c) => c._id === id)
     }
   }
 })
