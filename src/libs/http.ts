@@ -1,4 +1,5 @@
-import axios, { AxiosRequestConfig } from 'axios'
+// import axios, { AxiosRequestConfig } from 'axios'
+import axios from 'axios'
 import store from '@/store'
 // axios.defaults.baseURL = ''
 // interceptors 发送请求的拦截器
