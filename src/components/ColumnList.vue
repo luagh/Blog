@@ -20,7 +20,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue'
-import { ColumnProps } from '../store/testData'
+import { ColumnProps } from '@/declareData'
 
 export default defineComponent({
   name: 'ColumnList',

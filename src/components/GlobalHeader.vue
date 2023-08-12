@@ -30,7 +30,7 @@
 import { defineComponent, PropType } from 'vue'
 import Dropdown from '../base/DropDown.vue'
 import DropdownItem from '../base/DropdownItem.vue'
-import { UserProps } from '../store/testData'
+import { UserProps } from '@/declareData'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import createMessage from '@/base/createMessage'

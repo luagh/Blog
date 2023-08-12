@@ -23,8 +23,9 @@
 
 <script lang="ts">
 import { defineComponent, reactive, PropType, onMounted, toRefs, computed } from 'vue'
-import { RuleProps } from '../store/testData'
 import { emitter } from './ValidateForm.vue'
+import { RuleProps } from '@/declareData'
+
 const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 export type RulesProps = RuleProps[]
 export type TagType = 'input' | 'textarea' | 'custom'

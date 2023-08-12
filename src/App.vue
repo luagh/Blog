@@ -21,7 +21,7 @@ import { useStore } from 'vuex'
 
 import GlobalHeader from './components/GlobalHeader.vue'
 import Loader from '@/base/Loading.vue'
-
+import { GlobalDataProps } from '@/declareData'
 import createMessage from '@/base/createMessage'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
@@ -32,7 +32,7 @@ export default defineComponent({
     Loader
   },
   setup() {
-    const store = useStore()
+    const store = useStore<GlobalDataProps>()
     const currentUser = computed(() => store.state.user)
     const isLoading = computed(() => store.state.loading)
 

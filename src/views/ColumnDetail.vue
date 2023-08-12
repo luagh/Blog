@@ -21,9 +21,9 @@
 import { defineComponent, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import { GlobalDataProps } from '@/store/index'
+
 import PostList from '@/components/PostList.vue'
-import { ColumnProps, PostProps } from '@/store/testData'
+import { GlobalDataProps, ColumnProps, PostProps } from '@/declareData'
 import { generateFitUrl } from '@/helper'
 export default defineComponent({
   name: 'ColumnDetail',
