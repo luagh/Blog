@@ -39,12 +39,40 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.meta.requiredLogin && !store.state.user.isLogin) {
-    next({ name: 'login' })
+  const { user, token } = store.state
+  const { requiredLogin, redirectAleadyLogin } = to.meta
+  if (!user.isLogin) {
+    if (token) {
+      axios.defaults.headers.common.Authorization = `Bearer ${token}`
+      store
+        .dispatch('fetchCurrentUser')
+        .then(() => {
+          if (redirectAleadyLogin) {
+            next('/')
+          } else {
+            next()
+          }
+        })
+        .catch((e) => {
+          console.error(e)
+          localStorage.removeItem('token')
+          next('login')
+        })
+    } else {
+      if (requiredLogin) {
+        next('login')
+      } else {
+        next()
+      }
+    }
   } else if (to.meta.redirectAlreadyLogin && !store.state.user.isLogin) {
     next({ name: 'home' })
   } else {
-    next()
+    if (redirectAleadyLogin) {
+      next('/')
+    } else {
+      next()
+    }
   }
 })
 export default router
