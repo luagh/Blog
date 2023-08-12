@@ -26,33 +26,49 @@
         <router-link
           type="button"
           class="btn btn-success"
-          :to="{ name: 'create', query: { id: currentPost._id } }"
+          :to="{ name: 'create', query: { id: currentPost.id } }"
           >编辑</router-link
         >
-        <button type="button" class="btn btn-danger">删除</button>
+        <button type="button" class="btn btn-danger" @click.prevent="modalIsVisible = true">
+          删除
+        </button>
       </div>
     </article>
+    <modal
+      title="删除文章"
+      :visible="modalIsVisible"
+      @modal-on-close="modalIsVisible = false"
+      @modal-on-confirm="hideAndDelete"
+    >
+      <p>确定要删除这篇文章吗？</p>
+    </modal>
   </div>
 </template>
 
 <script lang="ts">
-import MarkdownIt from 'markdown-it'
-import { defineComponent, onMounted, computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { defineComponent, onMounted, computed, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import MarkdownIt from 'markdown-it'
 import { GlobalDataProps } from '@/store'
-import { PostProps, ImageProps, UserProps } from '@/store/testData'
+import { PostProps, ImageProps, UserProps, ResponseType } from '@/store/testData'
 import UserProfile from '@/components/UserProfile.vue'
+import Modal from '@/base/Modal.vue'
+import createMessage from '@/base/createMessage'
+
 export default defineComponent({
   name: 'PostDetail',
   components: {
-    UserProfile
+    UserProfile,
+    Modal
   },
   setup() {
     const store = useStore<GlobalDataProps>()
+    const router = useRouter()
     const route = useRoute()
     const currentId = route.params.id
     const md = new MarkdownIt()
+    const modalIsVisible = ref(false)
     onMounted(() => {
       store.dispatch('fetchPost', currentId)
     })
@@ -65,10 +81,10 @@ export default defineComponent({
       return true
     })
     const showEditArea = computed(() => {
-      const { isLogin, _id } = store.state.user
+      const { isLogin, id } = store.state.user
       if (currentPost.value && currentPost.value.author && isLogin) {
         const postAuthor = currentPost.value.author as UserProps
-        return postAuthor._id === _id
+        return postAuthor.id === id
       } else {
         return false
       }
@@ -82,11 +98,22 @@ export default defineComponent({
         return null
       }
     })
+    const hideAndDelete = () => {
+      modalIsVisible.value = false
+      store.dispatch('deletePost', currentId).then((rawData: ResponseType<PostProps>) => {
+        createMessage('删除成功，2秒后跳转到专栏首页', 'success', 2000)
+        setTimeout(() => {
+          router.push(`/column/${store.state.user.columnId}`)
+        }, 2000)
+      })
+    }
     return {
       currentPost,
       currentHTML,
       currentImageUrl,
-      showEditArea
+      showEditArea,
+      modalIsVisible,
+      hideAndDelete
     }
   }
 })

@@ -11,7 +11,13 @@
         <button class="btn btn-primary">点击上传</button>
       </slot>
     </div>
-    <input type="file" class="file-input d-none" ref="fileInput" @change="handleFileChange" />
+    <input
+      name="image"
+      type="file"
+      class="file-input d-none"
+      ref="fileInput"
+      @change="handleFileChange"
+    />
   </div>
 </template>
 

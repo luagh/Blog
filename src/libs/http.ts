@@ -24,8 +24,8 @@ axios.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-axios.get('/api/columns?currentPage=1&pageSize=5').then((res) => {
-  console.log(res)
-})
+// axios.get('/api/columns?currentPage=1&pageSize=5').then((res) => {
+//   console.log(res)
+// })
 
 export { axios, AxiosRequestConfig }

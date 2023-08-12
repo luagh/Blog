@@ -99,21 +99,21 @@ export default defineComponent({
       }
     })
     const onFileUploadedSuccess = (rawData: ResponseType<ImageProps>) => {
-      if (rawData.data._id) {
-        imageId = rawData.data._id
+      if (rawData.data.id) {
+        imageId = rawData.data.id
       }
     }
     const onFormSubmit = (result: boolean) => {
       if (result) {
-        const { column, _id } = store.state.user
-        if (column) {
+        const { columnId, id } = store.state.user
+        if (columnId) {
           const newPost: PostProps = {
-            _id: new Date().getTime().toLocaleString(),
+            id: new Date().getTime().toLocaleString(),
             title: titleVal.value,
             content: contentVal.value,
-            column,
+            columnId: columnId,
             createdAt: new Date().toLocaleString(),
-            author: _id
+            author: id
           }
           if (imageId) {
             newPost.image = imageId
@@ -128,7 +128,7 @@ export default defineComponent({
           store.dispatch(actionName, sendData).then(() => {
             createMessage('发表成功，2秒后跳转到文章', 'success', 2000)
             setTimeout(() => {
-              router.push({ name: 'column', params: { id: column } })
+              router.push({ name: 'column', params: { id: columnId } })
             }, 2000)
           })
         }
