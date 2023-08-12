@@ -26,7 +26,7 @@ const store = createStore<GlobalDataProps>({
     error: { status: false },
     token: storageHandler.getItem(storageType, 'token') || '',
     loading: false,
-    columns: { data: {}, isLoaded: false },
+    columns: { data: {}, currentPage: 0, total: 0 },
     posts: { data: {}, loadedColumns: [] },
     user: { isLogin: false }
   },
@@ -35,8 +35,17 @@ const store = createStore<GlobalDataProps>({
       state.posts.data[newPost.id] = newPost
     },
     fetchColumns(state, rawData) {
-      state.columns.data = arrToObj(rawData.data)
-      state.columns.isLoaded = true
+      const { data } = state.columns
+      const { TotalCount, CurrentPage } = rawData.pager
+      console.log('1', CurrentPage)
+      if (CurrentPage === 3) {
+        return
+      }
+      state.columns = {
+        data: { ...data, ...arrToObj(rawData.data) },
+        total: TotalCount,
+        currentPage: CurrentPage * 1
+      }
     },
     fetchColumn(state, rawData) {
       state.columns.data[rawData.data.id] = rawData.data
@@ -81,9 +90,14 @@ const store = createStore<GlobalDataProps>({
     }
   },
   actions: {
-    fetchColumns({ state, commit }) {
-      if (!state.columns.isLoaded) {
-        return asyncAndCommit('/api/columns', 'fetchColumns', commit)
+    fetchColumns({ state, commit }, params = {}) {
+      const { currentPage = 1, perPage = 6 } = params
+      if (state.columns.currentPage < currentPage) {
+        return asyncAndCommit(
+          `/api/columns?page=${currentPage}&perPage=${perPage}`,
+          'fetchColumns',
+          commit
+        )
       }
     },
     fetchColumn({ state, commit }, cid) {
