@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-dark bg-primary justify-content-beween mb-4 px-4">
-    <a class="navbar-brand" to="/">wdf专栏</a>
+    <router-link class="navbar-brand" to="/">wdf专栏</router-link>
     <ul v-if="!user.isLogin" class="list-inline mb-0">
       <li class="list-inline-item">
         <router-link to="/login" class="btn btn-outline-light my-2">登陆</router-link>
@@ -44,7 +44,7 @@ export default defineComponent({
       required: true
     }
   },
-  setup () {
+  setup() {
     const store = useStore()
     const router = useRouter()
     const handleLogout = () => {
@@ -56,5 +56,6 @@ export default defineComponent({
     return {
       handleLogout
     }
+  }
 })
 </script>

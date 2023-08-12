@@ -5,6 +5,7 @@
       action="/api/upload"
       class="d-flex align-items-center justify-content-center bg-light text-secondary w-100 my-4"
       :beforeUpload="uploadCheck"
+      :uploaded="uploadedData"
       @file-uploaded-success="onFileUploadedSuccess"
     >
       <h2>点击上传头图</h2>
@@ -51,8 +52,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { defineComponent, ref, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import axios from 'axios'
 import { GlobalDataProps } from '@/store/index'
@@ -72,11 +73,29 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>()
     const router = useRouter()
+    const route = useRoute()
+    const queryId = route.query.id
+    const isEditMode = !!queryId
+    const uploadedData = ref()
     const titleVal = ref('')
     let imageId = ''
     const titleRules: RulesProps = [{ type: 'required', message: '文章标题不能为空' }]
     const contentVal = ref('')
     const contentRules: RulesProps = [{ type: 'required', message: '文章详情不能为空' }]
+    onMounted(() => {
+      if (isEditMode) {
+        store.dispatch('fetchPost', queryId).then((rawData: ResponseType<PostProps>) => {
+          const currentPost = rawData.data
+          console.log(currentPost)
+          const { image, title, content } = currentPost
+          titleVal.value = title
+          contentVal.value = content || ''
+          if (image) {
+            uploadedData.value = { data: image }
+          }
+        })
+      }
+    })
     const onFileUploadedSuccess = (rawData: ResponseType<ImageProps>) => {
       if (rawData.data._id) {
         imageId = rawData.data._id
@@ -125,7 +144,9 @@ export default defineComponent({
       contentRules,
       onFormSubmit,
       uploadCheck,
-      onFileUploadedSuccess
+      onFileUploadedSuccess,
+      isEditMode,
+      uploadedData
     }
   }
 })
