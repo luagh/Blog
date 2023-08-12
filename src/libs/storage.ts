@@ -40,3 +40,4 @@ export class StorageHandler {
     }
   }
 }
+export const storageType = StorageType.Local
