@@ -16,7 +16,7 @@
     <button
       v-if="!isLastPage"
       @click="loadMorePage"
-      class="btn btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25"
+      class="btn btn-outline-primary mt-2 mb-5 mx-auto btn-block w-25 load-more"
     >
       加载更多
     </button>
@@ -55,4 +55,9 @@ export default defineComponent({
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.load-more {
+  margin-left: 50% !important;
+  transform: translate3d(-50%, 0, 0);
+}
+</style>
